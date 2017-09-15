@@ -90,7 +90,7 @@ process '1D_prepare_vcf_file' {
 
   input:
       file variantFile from variants_file
-      file blacklisted from blacklisted_file
+      file blacklisted from blacklist_file
 
   output:
       set ${variantsFile.baseName}.filtered.recode.vcf.gz, ${variantsFile.baseName}.filtered.recode.vcf.tbi  into prepared_vcf_ch
