@@ -13,3 +13,23 @@ variants_file   = file(params.variants)
 blacklist_file  = file(params.blacklist)
 reads_ch        = Channel .fromFilePairs( params.reads )
 GATK            = params.gatk
+
+reads_ch.println()
+
+/*
+ * Process 1A: Create a FASTA genome index with samtools
+ */
+process '1A_prepare_genome_samtools' {
+	input: 
+		file genome from genome_file
+	
+	output:
+		file "${genome}.fai" into genome_index_ch
+		
+		
+	script:
+	"""
+		samtools faidx ${genome} 	
+	"""
+		
+}
