@@ -33,3 +33,24 @@ process '1A_prepare_genome_samtools' {
 	"""
 		
 }
+
+
+/*
+ * Process 1B: Create a FASTA genome sequence dictionary with Picard for GATK
+ */
+
+process '1B_prepare_genome_picard' {
+
+  input:
+      file genome from genome_file
+
+  output:
+      file "${genome.baseName}.dict" into genome_dictionary_ch
+
+  script:
+  """
+  PICARD=`which picard.jar`
+  java -jar \$PICARD CreateSequenceDictionary R= $genome O= ${genome.baseName}.dict
+  """
+}
+
