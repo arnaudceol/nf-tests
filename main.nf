@@ -78,3 +78,31 @@ process '1C_prepare_star_genome_index' {
   """
 }
 
+
+
+
+
+/*
+ * Process 1D: Create a file containing the filtered and recoded set of variants
+ */
+
+process '1D_prepare_vcf_file' {
+
+  input:
+      file variantFile from variants_file
+      file blacklisted from blacklisted_file
+
+  output:
+      set ${variantsFile.baseName}.filtered.recode.vcf.gz, ${variantsFile.baseName}.filtered.recode.vcf.tbi  into prepared_vcf_ch
+      
+  script:
+    	  """
+    	  vcftools --gzvcf $variantsFile -c \
+    	           --exclude-bed ${blacklisted} \
+    	           --recode | bgzip -c \
+    	           > ${variantsFile.baseName}.filtered.recode.vcf.gz 
+
+    	  tabix ${variantsFile.baseName}.filtered.recode.vcf.gz 
+    	  """
+}
+
