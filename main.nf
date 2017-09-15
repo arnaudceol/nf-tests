@@ -54,3 +54,27 @@ process '1B_prepare_genome_picard' {
   """
 }
 
+
+/*
+ * Process 1C: Create the genome index file for STAR
+ */
+
+process '1C_prepare_star_genome_index' {
+
+  input:
+      file genome from genome_file
+
+  output:
+      file "genome_dir" into genome_dir_ch
+
+  script:
+  """
+  mkdir genome_dir
+
+  STAR --runMode genomeGenerate \
+       --genomeDir genome_dir \
+       --genomeFastaFiles ${genome} \
+       --runThreadN ${task.cpus}
+  """
+}
+
